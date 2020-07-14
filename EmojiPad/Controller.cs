@@ -143,9 +143,8 @@ namespace EmojiPad
                 }
             }
 
-            keysDown.Add(key);
             if ((keysDown.Contains(KeyboardHook.VKeys.LMENU)|| keysDown.Contains(KeyboardHook.VKeys.RMENU))
-                && keysDown.Contains(KeyboardHook.VKeys.KEY_E))
+                && keysDown.Contains(KeyboardHook.VKeys.KEY_E) && keysDown.Contains(KeyboardHook.VKeys.LWIN))
             {
                 Active = true;
                 EmojiPicker.RunActionSafe(() =>
