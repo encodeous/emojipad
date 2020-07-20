@@ -34,9 +34,9 @@ namespace EmojiPad
         public delegate void EmojiEvent(string key);
         public static Button CreateButtonFromImage(string key)
         {
-            var button = new LazyButton()
+            var button = new Button()
             {
-                id = key,
+                Image = Extension.GetImageScaled(Controller.ImageMap[key], 32),
                 TabStop = false,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.FromArgb(37, 37, 38),
@@ -142,7 +142,7 @@ namespace EmojiPad
                     return true;
                 }
             }
-
+            keysDown.Add(key);
             if ((keysDown.Contains(KeyboardHook.VKeys.LMENU)|| keysDown.Contains(KeyboardHook.VKeys.RMENU))
                 && keysDown.Contains(KeyboardHook.VKeys.KEY_E) && keysDown.Contains(KeyboardHook.VKeys.LWIN))
             {
@@ -184,9 +184,9 @@ namespace EmojiPad
                 return String.Compare(o1.Item1, o2.Item1, StringComparison.Ordinal);
             });
             var imgList = new List<string>();
-            foreach (var k in list)
+            for (int i = 0; i < list.Count && i < 200; i++)
             {
-                imgList.Add(k.Item1);
+                imgList.Add(list[i].Item1);
             }
 
             return imgList.ToArray();
@@ -212,9 +212,9 @@ namespace EmojiPad
                 return String.Compare(o1.Item1, o2.Item1, StringComparison.Ordinal);
             });
             var imgList = new List<string>();
-            foreach (var k in list)
+            for (int i = 0; i < list.Count && i < 200; i++)
             {
-                imgList.Add(k.Item1);
+                imgList.Add(list[i].Item1);
             }
 
             return imgList.ToArray();
