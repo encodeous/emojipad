@@ -1,0 +1,23 @@
+/* Error: Can't find stylesheet to import.
+ *    ,
+ * 5  | / @use "@material/theme" with (
+ * 6  | |     $primary: #90caf9,
+ * 7  | |     $secondary: #ffcc80,
+ * 8  | |     $error: #ef9a9a,
+ * 9  | |     $background:#263238,
+ * 10 | |     $surface: #37474f,
+ * 11 | | );
+ *    | '-^
+ *    '
+ *   theme.scss 5:1  root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Can't find stylesheet to import.\a    \2577 \a 5  \2502  \250c  @use \"@material/theme\" with (\a 6  \2502  \2502      $primary: #90caf9,\a 7  \2502  \2502      $secondary: #ffcc80,\a 8  \2502  \2502      $error: #ef9a9a,\a 9  \2502  \2502      $background:#263238,\a 10 \2502  \2502      $surface: #37474f,\a 11 \2502  \2502  );\a    \2502  \2514 \2500 ^\a    \2575 \a   theme.scss 5:1  root stylesheet";
+}
