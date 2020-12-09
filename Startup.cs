@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using emojipad.Services;
+using emojipad.Shared;
 using Material.Blazor;
 
 namespace emojipad
@@ -34,6 +35,8 @@ namespace emojipad
             services.AddScoped<ClipboardService>();
             services.AddSingleton<WindowService>();
             services.AddSingleton<SearchService>();
+            services.AddSingleton<FileService>();
+            services.AddSingleton<EmojiContext>();
             services.AddMBServices(
                 toastServiceConfiguration: new MBToastServiceConfiguration()
                 {
@@ -56,6 +59,11 @@ namespace emojipad
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // "Warm Up" Services
+            app.ApplicationServices.GetService<SearchService>();
+            app.ApplicationServices.GetService<FileService>();
+            var wndsvc = app.ApplicationServices.GetService<WindowService>();
+            // Setup aspnet stuff
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -64,25 +72,21 @@ namespace emojipad
             {
                 app.UseExceptionHandler("/Error");
             }
-
             app.UseStaticFiles();
-
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
-
-            var wndsvc = (WindowService)app.ApplicationServices.GetService(typeof(WindowService));
-
+            
+            // Electron
             Electron.App.Ready += wndsvc.OnLoad;
 
             Electron.App.SetLoginItemSettings(new LoginSettings()
             {
                 OpenAtLogin = Convert.ToBoolean(Configuration["ems:run-on-start"]),
-                Path = Process.GetCurrentProcess().MainModule.FileName,
+                Path = Utilities.GetExecutingFile()
             });
         }
     }

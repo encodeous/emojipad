@@ -3,10 +3,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="BlazorVirtualScrolling" Version="1.0.0" />
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />
-    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00013" />
-    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00013" />
     <PackageReference Include="Material.Blazor" Version="1.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="electron.manifest.json">

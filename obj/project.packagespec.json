@@ -33,21 +33,27 @@
   "frameworks": {
     "netcoreapp3.1": {
       "dependencies": {
+        "BlazorVirtualScrolling": {
+          "target": "Package",
+          "version": "[1.0.0, )"
+        },
         "ElectronNET.API": {
           "target": "Package",
           "version": "[9.31.2, )"
         },
-        "Lucene.Net": {
-          "target": "Package",
-          "version": "[4.8.0-beta00013, )"
-        },
-        "Lucene.Net.Analysis.Common": {
-          "target": "Package",
-          "version": "[4.8.0-beta00013, )"
-        },
         "Material.Blazor": {
           "target": "Package",
           "version": "[1.1.4, )"
+        },
+        "Microsoft.EntityFrameworkCore.Design": {
+          "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[5.0.1, )"
+        },
+        "Microsoft.EntityFrameworkCore.Sqlite": {
+          "target": "Package",
+          "version": "[5.0.1, )"
         }
       },
       "imports": [
