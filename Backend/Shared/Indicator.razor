@@ -1,0 +1,18 @@
+﻿@using emojipad.Services
+<div style="@style"/>
+
+@code {
+    [Inject]
+    public StatusService StatusService { get; set; }
+    string style = "height: 5px; background-color: #2ecc71;";
+    protected override void OnInitialized()
+    {
+        StatusService.ColorChangeDelegate += ColorChangeDelegate;
+    }
+
+    private void ColorChangeDelegate(string color)
+    {
+        style = $"height: 5px; background-color: #{color};";
+        InvokeAsync(StateHasChanged).Wait();
+    }
+}
