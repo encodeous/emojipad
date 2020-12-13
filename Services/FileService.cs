@@ -101,7 +101,8 @@ namespace emojipad.Services
         public bool IsValidImage(FileInfo file)
         {
             return file.Extension.ToLower() == ".jpeg"
-                   || file.Extension.ToLower() == ".png";
+                   || file.Extension.ToLower() == ".png"
+                || file.Extension.ToLower() == ".jpg";
         }
     }
 }
