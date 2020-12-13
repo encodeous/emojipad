@@ -31,7 +31,7 @@ Configuration of the app may be done in the settings menu.
 Options include:
 
 - Emoji paste size (pixels): `Specifies the maximal square bounds the emoji is allowed to fill`
-- Frequent emoji count: `The maximal number of emojis to show in the favourite section of the picker`
+- Frequent emoji count: `The maximal number of emojis to show in the frequent section of the picker`
 - EmojiPad launch keybind: `A Hotkey that will show the picker when EmojiPad is hidden`
 - EmojiPad emoji folder path: `The folder that contains all the emojis, NOTE: currently EmojiPad does not support sub-folders`
 - Show window on EmojiPad start: `Should the EmojiPad window be shown when it starts?`
