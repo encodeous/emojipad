@@ -7,7 +7,9 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
@@ -32,6 +34,63 @@ namespace emojipad
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var def = EmojiPadConfiguration.CreateDefault();
+            var cfg = EmojiPadConfiguration.Load();
+
+            if (!Directory.Exists(cfg.EmojiFolderPath))
+            {
+                cfg.EmojiFolderPath = def.EmojiFolderPath;
+            }
+
+            if (cfg.FrequentEmojiCount > 1000)
+            {
+                cfg.FrequentEmojiCount = 1000;
+            }
+
+            if (cfg.EmojiPasteSize > 10000)
+            {
+                cfg.EmojiPasteSize = 10000;
+            }
+
+            bool validAccelerator = true;
+            var modifiers = new Regex("(Command|Cmd|Control|Ctrl|CommandOrControl|CmdOrCtrl|Alt|Option|AltGr|Shift|Super)");
+            var keycodes = new Regex("([0-9A-Z)!@#$%^&*(:+<_>?~{|}\";=,-./`[\\]']|F1*[1-9]|F10|F2[0-4]|Plus|Space|Tab|Backspace|Delete|Insert|Return|Enter|Up|Down|Left|Right|Home|End|PageUp|PageDown|Escape|Esc|VolumeUp|VolumeDown|VolumeMute|MediaNextTrack|MediaPreviousTrack|MediaStop|MediaPlayPause|PrintScreen)");
+            var spl = cfg.Keybind.Split("+");
+            bool keyfound = false;
+            for (int i = 0; i < spl.Length; i++)
+            {
+                string val = spl[i];
+                bool iskey = keycodes.IsMatch(val);
+                bool ismod = modifiers.IsMatch(val);
+                if (iskey && !ismod)
+                {
+                    if (keyfound)
+                    {
+                        validAccelerator = false;
+                        break;
+                    }
+                    keyfound = true;
+                }
+
+                if (i == spl.Length - 1 && !keyfound)
+                {
+                    validAccelerator = false;
+                    break;
+                }
+                if(!ismod && !iskey)
+                {
+                    validAccelerator = false;
+                    break;
+                }
+            }
+
+            if (!validAccelerator || !keyfound)
+            {
+                cfg.Keybind = def.Keybind;
+            }
+
+            cfg.Save();
+            services.AddSingleton(cfg);
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<ClipboardService>();
@@ -89,11 +148,6 @@ namespace emojipad
             
             // Electron
             Electron.App.Ready += wndsvc.OnLoad;
-            // Electron.App.SetLoginItemSettings(new LoginSettings()
-            // {
-            //     OpenAtLogin = Convert.ToBoolean(Configuration["ems:run-on-start"]),
-            //     Path = Utilities.GetExecutingFile()
-            // });
         }
     }
 }

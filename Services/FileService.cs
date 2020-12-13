@@ -6,34 +6,31 @@ using System.Threading;
 using System.Threading.Tasks;
 using emojipad.Shared;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace emojipad.Services
 {
     public class FileService
     {
-        private readonly IConfiguration _configuration;
         private readonly EmojiContext _context;
-        private readonly StatusService _status;
+        private readonly EmojiPadConfiguration _config;
         private EventService _event;
 
-        public FileService(IConfiguration configuration, EmojiContext context, StatusService status, EventService events)
+        public FileService(EmojiContext context, EventService events, EmojiPadConfiguration config)
         {
-            _configuration = configuration;
             _context = context;
-            _status = status;
             _event = events;
+            _config = config;
             context.Database.Migrate();
 
-            if (!Directory.Exists(Utilities.GetEmojiFolderPath()))
+            if (!Directory.Exists(_config.EmojiFolderPath))
             {
-                Directory.CreateDirectory(Utilities.GetEmojiFolderPath());
+                Directory.CreateDirectory(_config.EmojiFolderPath);
             }
             
             Task.Run(() =>
             {
                 FileSystemWatcher fsw = new FileSystemWatcher();
-                fsw.Path = Utilities.GetEmojiFolderPath();
+                fsw.Path = _config.EmojiFolderPath;
                 fsw.Filter = "*.*";
                 fsw.Renamed += FswOnRenamed;
                 fsw.EnableRaisingEvents = true;
@@ -44,6 +41,7 @@ namespace emojipad.Services
                     {
                         if (SyncEmojiCache())
                         {
+                            _event.SetBusy();
                             context.SaveChanges();
                             Thread.Sleep(1000);
                             _event.InvokeRefreshEmojis();
@@ -58,39 +56,49 @@ namespace emojipad.Services
         }
         private void FswOnRenamed(object sender, RenamedEventArgs e)
         {
-            try
+            lock (_context)
             {
-                _status.SetBusy();
-                var fi = new FileInfo(e.FullPath);
+                try
+                {
+                    _event.SetBusy();
+                    var fi = new FileInfo(e.FullPath);
 
-                if (fi.Directory.FullName != Utilities.GetEmojiFolderPath() && IsValidImage(fi))
-                {
-                    return;
-                }
-
-                Console.WriteLine($"Emoji {e.OldName} has been Renamed to {e.Name}! Updating Database...");
-                var sel = from k in _context.Emojis
-                    where k.FileName == e.OldName
-                    select k;
-                if (sel.Count() != 0)
-                {
-                    var f = sel.First();
-                    f.FileName = fi.Name;
-                }
-                else
-                {
-                    var f = new Emoji()
+                    if (fi.Directory.FullName != _config.EmojiFolderPath && IsValidImage(fi))
                     {
-                        FileName = fi.Name,
-                        UsedFrequency = 0
-                    };
-                    f.FileName = fi.Name;
-                    _context.Add(f);
+                        return;
+                    }
+
+                    Console.WriteLine($"Emoji {e.OldName} has been Renamed to {e.Name}! Updating Database...");
+                    var sel = from k in _context.Emojis
+                        where k.FileName == e.OldName
+                        select k;
+                    if (sel.Count() != 0)
+                    {
+                        var f = sel.First();
+                        var nf = new Emoji()
+                        {
+                            FileName = fi.Name,
+                            UsedFrequency = f.UsedFrequency
+                        };
+                        _context.Add(nf);
+                        _context.Remove(f);
+                    }
+                    else
+                    {
+                        var f = new Emoji()
+                        {
+                            FileName = fi.Name,
+                            UsedFrequency = 0
+                        };
+                        _context.Add(f);
+                    }
+                    _event.InvokeRefreshEmojis();
+                    _context.SaveChanges();
                 }
-            }
-            catch
-            {
-                // ignored
+                catch
+                {
+                    // ignored
+                }
             }
         }
         
@@ -100,7 +108,7 @@ namespace emojipad.Services
             bool changed = false;
             lock (_context)
             {
-                var dir = new DirectoryInfo(Utilities.GetEmojiFolderPath());
+                var dir = new DirectoryInfo(_config.EmojiFolderPath);
                 var files = new HashSet<string>();
                 foreach (var enumerateFile in dir.EnumerateFiles())
                 {
@@ -147,9 +155,7 @@ namespace emojipad.Services
         public bool IsValidImage(FileInfo file)
         {
             return file.Extension.ToLower() == ".jpeg"
-                   || file.Extension.ToLower() == ".png"
-                   || file.Extension.ToLower() == ".tga"
-                   || file.Extension.ToLower() == ".bmp";
+                   || file.Extension.ToLower() == ".png";
         }
     }
 }

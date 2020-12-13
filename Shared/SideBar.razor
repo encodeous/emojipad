@@ -1,0 +1,80 @@
+﻿@using emojipad.Services
+@using ElectronNET.API
+<div id="side-bar">
+    <div title="Hide EmojiPad">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="center_focus_strong" @onclick="OnHideClick"/>
+    </div>
+    <div title="Open Emoji Folder">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="folder" @onclick="OpenEmojiFolder"/>
+    </div>
+    <div title="Refresh Emojis">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="refresh" @onclick="ReloadClicked"/>
+    </div>
+    <div title="Open Settings">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="settings" @onclick="SettingsClicked"/>
+    </div>
+    <div title="Quit EmojiPad">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="exit_to_app" @onclick="OnCloseClick"/>
+    </div>
+    <MatDialog @bind-IsOpen="@dialogIsOpen">
+        <MatDialogTitle>Are you sure you want to exit?</MatDialogTitle>
+        <MatDialogContent>
+            Click Yes to completely exit EmojiPad, and disable the keybind.
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { dialogIsOpen = false; })">Cancel</MatButton>
+            <MatButton OnClick="@Close">Yes</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+</div>
+
+@code {
+    [Inject]
+    public EventService EventService { get; set; }
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+    [Inject]
+    public EmojiPadConfiguration Config { get; set; }
+    [Inject]
+    public WindowService Window { get; set; }
+
+    private string _currentQuery = "";
+    protected override void OnInitialized()
+    {
+        EventService.QueryChangedEvent += query => _currentQuery = query;
+    }
+
+    private void ReloadClicked(MouseEventArgs obj)
+    {
+        EventService.ChangeQuery(_currentQuery);
+    }
+
+    private void SettingsClicked(MouseEventArgs obj)
+    {
+        Navigation.NavigateTo("/settings");
+    }
+
+    private void OpenEmojiFolder(MouseEventArgs obj)
+    {
+        Electron.Shell.OpenPathAsync(Config.EmojiFolderPath);
+    }
+
+    private void OnHideClick(MouseEventArgs obj)
+    {
+        Window.Hide();
+    }
+
+
+    private bool dialogIsOpen = false;
+    
+    private void OnCloseClick(MouseEventArgs obj)
+    {
+        dialogIsOpen = true;
+    }
+    
+    private void Close()
+    {
+        Electron.App.Exit();
+    }
+
+}

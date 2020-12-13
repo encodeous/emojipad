@@ -13,6 +13,11 @@ namespace emojipad.Services
 
         private DateTime StopTime;
         
+        public StatusService(EventService events)
+        {
+            events.Busy += SetBusy;
+        }
+        
         public void Change(string color)
         {
             ColorChangeDelegate?.Invoke(color);

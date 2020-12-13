@@ -38,8 +38,11 @@
     <Exec Command="npm run build-theme" />
   </Target>
   <ItemGroup>
-    <Content Update="ElectronHostHook\**\*.*">
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    <Content Update="icon.png">
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="emojipad-conf.json" />
   </ItemGroup>
 </Project>

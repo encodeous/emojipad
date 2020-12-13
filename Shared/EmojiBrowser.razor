@@ -1,6 +1,7 @@
 ﻿@using Microsoft.Extensions.DependencyInjection
 @using System.IO
 @using System.Threading
+@using ElectronNET.API
 @using emojipad.Services
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration conf
@@ -22,7 +23,7 @@
 		<InfiniteScroll ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchEmojis()">
 			@foreach (var emote in _shownEmojis)
 			{
-				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote))" @onmouseover="(e => EmojiHoverCallback(emote))">
+				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
 					<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
 				</div>
 			}
@@ -36,7 +37,7 @@
 			<MatDivider Style="margin-bottom: 10px"/>
 			@foreach (var emote in FavouriteFeed)
 			{
-				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote))" @onmouseover="(e => EmojiHoverCallback(emote))">
+				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
 					<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
 				</div>
 			}
@@ -48,7 +49,7 @@
 			<InfiniteScroll ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchEmojis()">
 				@foreach (var emote in _shownEmojis)
 				{
-					<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote))" @onmouseover="(e => EmojiHoverCallback(emote))">
+					<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
 						<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
 						@* @onclick="@(x => EmojiClickCallback(emote))" @onmouseover="@(x => EmojiHoverCallback(emote))" *@
 					</div>
@@ -60,6 +61,7 @@
 </div>
 
 @code {
+	protected ElementReference emDiv;
 	[Inject]
 	public EventService Events { get; set; }
 	[Inject]
@@ -70,6 +72,10 @@
 	public ClipboardService Clip { get; set; }
 	[Inject]
 	public IJSRuntime JsRuntime { get; set; }
+	[Inject]
+	public WindowService Window { get; set; }
+	[Inject]
+	public EmojiPadConfiguration Config { get; set; }
 	
 	public bool SearchView { get; set; }
 	public IEnumerable<Emoji> FavouriteFeed { get; set; }
@@ -79,9 +85,10 @@
 	private IEnumerator<Emoji> _emojiLoader;
 	private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
 	private string CurQuery = "";
-
+	
 	private void Load(string query = "")
 	{
+		Events.SetBusy();
 		if (_semaphoreSlim.CurrentCount != 0)
 		{
 			CurQuery = query;
@@ -113,7 +120,7 @@
 			}).GetAwaiter().GetResult();
 		}
 	}
-	
+
 	protected override void OnInitialized()
 	{
 		Load();
@@ -130,20 +137,26 @@
 			_shownEmojis.Add(cur);
 			cnt++;
 		}
-    }
-	private void EmojiClickCallback(Emoji obj)
-	{
-		bool updateFav = obj.UsedFrequency == 0;
-		obj.UsedFrequency++;
-		Context.Emojis.Update(obj);
-		Context.SaveChanges();
-		
-		Clip.CopyEmoji(obj, false);
-		
-		Events.ItemBarUpdate.Invoke(obj);
-		if (updateFav)
+		if (cnt != 0)
 		{
-			Load(CurQuery);
+			Events.SetBusy();
+		}
+    }
+	private void EmojiClickCallback(Emoji obj, bool shift)
+	{
+		lock (Context)
+		{
+			Events.SetBusy();
+			obj.UsedFrequency++;
+			Context.Emojis.Update(obj);
+			Context.SaveChanges();
+			Clip.CopyEmoji(obj, shift);
+		
+			Events.ItemBarUpdate.Invoke(obj);
+			if (Config.HideAfterCopy)
+			{
+				Window.Hide();
+			}
 		}
 	}
 	

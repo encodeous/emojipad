@@ -7,30 +7,30 @@ using System.Net.Http.Headers;
 using emojipad.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Net.Http.Headers;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Processors.Transforms;
 
 namespace emojipad.Services
 {
-    [Route("api/load")]
     [ApiController]
     public class EmojiLoaderService : ControllerBase
     {
         private readonly EmojiContext _context;
-        public EmojiLoaderService(EmojiContext context)
+        private readonly EmojiPadConfiguration _config;
+        public EmojiLoaderService(EmojiContext context, EmojiPadConfiguration config)
         {
             _context = context;
+            _config = config;
         }
-        [HttpGet("{filename}")]
+        [HttpGet("api/load/{filename}")]
         public IActionResult LoadImage(string filename)
         {
             lock (_context)
             {
-                var fi = new FileInfo(Path.Join(Utilities.GetEmojiFolderPath(), filename));
+                var fi = new FileInfo(Path.Join(_config.EmojiFolderPath, filename));
                 var entity = _context.Emojis.Find(fi.Name);
-                if (fi.Directory.FullName == Utilities.GetEmojiFolderPath() && entity != null)
+                if (fi.Directory.FullName == _config.EmojiFolderPath && entity != null)
                 {
                     var fs = System.IO.File.OpenRead(fi.FullName);
                     if (new FileExtensionContentTypeProvider().TryGetContentType(fi.FullName, out var contentType))
@@ -42,14 +42,14 @@ namespace emojipad.Services
                 return new NotFoundResult();
             }
         }
-        [HttpGet("{filename}/{maxsize}")]
+        [HttpGet("api/load/{filename}/{maxsize}")]
         public IActionResult LoadImage(string filename, int maxsize)
         {
             lock (_context)
             {
-                var fi = new FileInfo(Path.Join(Utilities.GetEmojiFolderPath(), filename));
+                var fi = new FileInfo(Path.Join(_config.EmojiFolderPath, filename));
                 var entity = _context.Emojis.Find(fi.Name);
-                if (fi.Directory.FullName == Utilities.GetEmojiFolderPath() && entity != null)
+                if (fi.Directory.FullName == _config.EmojiFolderPath && entity != null)
                 {
                     Image img = Image.Load(fi.FullName, out var format);
                     img.Mutate(x =>

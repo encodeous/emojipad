@@ -1,0 +1,30 @@
+﻿@using emojipad.Services
+@using ElectronNET.API
+<div id="side-bar">
+    <div title="Discard Changes">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="cancel" @onclick="CancelClicked"></MatIcon>
+    </div>
+    <div title="Save and Restart EmojiPad">
+        <MatIcon Class="side-bar-button side-bar-float" Icon="save" @onclick="SaveClicked"></MatIcon>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public EventService EventService { get; set; }
+    [Inject]
+    public NavigationManager Navigation { get; set; }
+
+    private void CancelClicked(MouseEventArgs obj)
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void SaveClicked(MouseEventArgs obj)
+    {
+        EventService.SaveConfig();
+        Navigation.NavigateTo("/");
+        Electron.App.Relaunch();
+        Electron.App.Exit();
+    }
+}
