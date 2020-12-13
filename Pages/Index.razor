@@ -1,0 +1,50 @@
+﻿@page "/"
+@using emojipad.Services
+<div id="search-wrapper">
+    @* <MBTextField  value="@SearchQuery" @oninput="OnUpdate" Label="Search for your emoji!" TextInputStyle="MBTextInputStyle.Outlined" TrailingIcon="search"/> *@
+    <MatTextField Style="height: 40px; width: 100%" TValue="string" OnInput="OnUpdate" Label="Search for your emoji!" Outlined="true" Icon="search" IconTrailing="true"></MatTextField>
+</div>
+
+<div id="emoji-wrapper">
+    <div id="left">
+        <SideBar/>
+        <Indicator/>
+    </div>
+    <div id="right">
+        <EmojiBrowser/>
+        <ItemBar/>
+    </div>
+</div>
+
+@code{
+    [Inject]  
+    public ClipboardService Service { get; set; }
+    [Inject]
+    public IJSRuntime JsRuntime { get; set; }
+    [Inject]
+    public EventService Events { get; set; }
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Task.Run(async () =>
+            {
+                while (Program.Running)
+                {
+                    await JsRuntime.InvokeVoidAsync("resetZoom");
+                    await Task.Delay(100);
+                }
+            });
+        }
+    }
+
+    public string SearchQuery = "";
+
+    private void OnUpdate(ChangeEventArgs obj)
+    {
+        SearchQuery = obj.Value.ToString();
+        Events.ChangeQuery(SearchQuery);
+    }
+
+}
+

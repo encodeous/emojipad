@@ -1,0 +1,85 @@
+﻿@page "/settings"
+@using emojipad.Services
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.Extensions.Configuration
+
+<div id="search-wrapper">
+    <h5>EmojiPad Settings</h5>
+</div>
+
+<div id="emoji-wrapper">
+    <div id="left">
+        <SettingsSideBar/>
+        <Indicator/>
+    </div>
+    <div id="right">
+        <div style="padding-top: 20px; padding-left: 20px; padding-right: 20px; overflow: auto; height: 313px;">
+            <EditForm Model="@Model">
+                <DataAnnotationsValidator/>
+                <MatTextField Style="height: 40px; width: 100%; margin-bottom: 20px" @bind-Value="@Model.EmojiPasteSize"
+                              Label="Emoji paste size (pixels)"
+                              Outlined="true"
+                              Dense="true"/>
+                <MatTextField Style="height: 40px; width: 100%; margin-bottom: 20px" @bind-Value="@Model.FrequentEmojiCount"
+                              Label="Frequent emoji count"
+                              Outlined="true"
+                              Dense="true"/>
+                <MatTextField Style="height: 40px; width: 100%; margin-bottom: 20px" @bind-Value="@Model.Keybind"
+                              Label="EmojiPad launch keybind"
+                              Outlined="true"
+                              Dense="true"/>
+                <MatTextField Style="height: 40px; width: 100%; margin-bottom: 20px" @bind-Value="@Model.EmojiFolderPath"
+                              Label="EmojiPad emoji folder path"
+                              Outlined="true"
+                              Dense="true"/>
+                <MBSwitch Label="Show window on EmojiPad start" @bind-Value="@Model.ShowOnStart"/>
+                <br/>
+                <MBSwitch Label="Run on user login" @bind-Value="@Model.RunOnStart"/>
+                <br/>
+                <MBSwitch Label="Auto hide window after copy" @bind-Value="@Model.HideAfterCopy"/>
+                <br/>
+                <MBSwitch Label="Use Regex patterns in search" @bind-Value="@Model.RegexSearch"/>
+                <br/>
+                <MBSwitch Label="Show EmojiPad ontop of other apps" @bind-Value="@Model.AlwaysOnTop"/>
+                <br/>
+                <MBSwitch Label="Hide EmojiPad when it has lost focus" @bind-Value="@Model.HideAfterLostFocus"/>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+    private EmojiPadConfiguration Model { get; set; }
+    [Inject]
+    public IJSRuntime JsRuntime { get; set; }
+    [Inject]
+    public EventService Events { get; set; }
+    [Inject]
+    public EmojiPadConfiguration Config { get; set; }
+    protected override void OnInitialized()
+    {
+        Events.ConfigurationSaveEvent += SaveConfig;
+        Model = Config.Clone();
+    }
+
+    private void SaveConfig()
+    {
+        Model.Save();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            Task.Run(async () =>
+            {
+                while (Program.Running)
+                {
+                    await JsRuntime.InvokeVoidAsync("resetZoom");
+                    await Task.Delay(100);
+                }
+            });
+        }
+    }
+}

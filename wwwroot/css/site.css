@@ -1,0 +1,185 @@
+@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+@font-face {
+    font-family: "Raleway";
+    src: url("../Raleway-VariableFont_wght.ttf") format('truetype');
+}
+body, html {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+    background-color: #36393F;
+    color: #D2D3D4;
+}
+
+.main .top-row a:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.titlebar {
+    font-size: 11px;
+    width: 100%;
+    height: 21px;
+    background-color: #1E1E1E;
+    color: white;
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+.mdc-button:focus{
+    outline: none;
+}
+
+/* Search Panel */
+
+#search-wrapper{
+    padding: 17px 5% 8px 5%;
+    box-shadow: 0px 2px 8px #292B2F;
+    position: relative;
+    height: 73px;
+    z-index: 999;
+}
+
+/* Emoji Panel */
+
+
+#emoji-wrapper {
+    height: 313px;
+    position: relative;
+    display: flex;
+}
+
+#left {
+    flex: 0 0 11.5%;
+    background-color: #202225;
+}
+
+#right {
+    flex: 1;
+    background-color: #2F3136;
+}
+
+#side-bar{
+    height: 308px;
+    padding-top: 5.5625px;
+}
+
+#info-bar{
+    position: relative;
+    height: 50px;
+    width: 100%;
+    background-color: #292B2F;
+}
+
+.emoji-background{
+    margin: 3px;
+    float: left;
+    background-color: #1E1E1E;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    cursor: pointer;
+}
+
+.emoji{
+    max-width: 40px;
+    max-height: 40px;
+    transition: opacity 0.5s;
+}
+.emoji:hover{
+    transition: opacity 0.05s;
+    opacity: 60%;
+}
+
+.side-bar-button-up{
+    float: top;
+}
+.side-bar-button-down{
+    float: bottom;
+}
+
+.side-bar-button{
+    padding-top: 5.5625px;
+    padding-bottom: 5.5625px;
+    padding-left: 11.125px;
+    font-size: 25px;
+    margin: auto;
+    cursor: pointer;
+}
+
+.side-bar-button:hover{
+    color: white;
+}
+
+#emoji-box{
+    height: 262px;
+    overflow: auto;
+    padding-top: 5px;
+    padding-left: 5px;
+}
+
+*::-webkit-scrollbar {
+    width: 8px;               /* width of the entire scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: #202225;        /* color of the tracking area */
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #72767D;    /* color of the scroll thumb */
+    border-radius: 10px;       /* roundness of the scroll thumb */
+}
+
+/* Logo */
+
+.em-logo {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    height: 100px;
+}

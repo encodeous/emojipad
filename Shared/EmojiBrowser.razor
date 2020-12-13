@@ -1,0 +1,167 @@
+﻿@using Microsoft.Extensions.DependencyInjection
+@using System.IO
+@using System.Threading
+@using ElectronNET.API
+@using emojipad.Services
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration conf
+<div id="emoji-box">
+	@if (SearchView && !EmojiSource.Any())
+	{
+		<div style="padding: 10px">
+			No results found! :(
+		</div>
+	}
+	else if (!EmojiSource.Any())
+	{
+		<div style="padding: 10px">
+			To add emojis to EmojiPad, click the folder icon on the Sidebar and copy emojis into the folder!
+		</div>
+	}
+	else if (SearchView || FavouriteFeed == null || !FavouriteFeed.Any())
+	{
+		<InfiniteScroll ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchEmojis()">
+			@foreach (var emote in _shownEmojis)
+			{
+				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
+					<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
+				</div>
+			}
+			<div id="observerTarget" style="width: 10px; height: 10px; display: inline-block;"/>
+		</InfiniteScroll>
+	}
+	else
+	{
+		<div style="display: inline-block">
+			<strong>Frequently Used</strong>
+			<MatDivider Style="margin-bottom: 10px"/>
+			@foreach (var emote in FavouriteFeed)
+			{
+				<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
+					<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
+				</div>
+			}
+		</div>
+		<br/>
+		<div style="display: inline-block">
+			<strong>All Emojis</strong>
+			<MatDivider Style="margin-bottom: 10px"/>
+			<InfiniteScroll ObserverTargetId="observerTarget" ObservableTargetReached="(e) => FetchEmojis()">
+				@foreach (var emote in _shownEmojis)
+				{
+					<div class="emoji-background" @onclick="(e => EmojiClickCallback(emote, e.ShiftKey))" @onmouseover="(e => EmojiHoverCallback(emote))">
+						<img src="/api/load/@(emote.FileName)" id="@emote.FileName" class="emoji" onerror="this.style.display='none'"/>
+						@* @onclick="@(x => EmojiClickCallback(emote))" @onmouseover="@(x => EmojiHoverCallback(emote))" *@
+					</div>
+				}
+				<div id="observerTarget" style="width: 10px; height: 10px; display: inline-block;"/>
+			</InfiniteScroll>
+		</div>
+	}
+</div>
+
+@code {
+	protected ElementReference emDiv;
+	[Inject]
+	public EventService Events { get; set; }
+	[Inject]
+	public EmojiContext Context { get; set; }
+	[Inject]
+	public SearchService Search { get; set; }
+	[Inject]
+	public ClipboardService Clip { get; set; }
+	[Inject]
+	public IJSRuntime JsRuntime { get; set; }
+	[Inject]
+	public WindowService Window { get; set; }
+	[Inject]
+	public EmojiPadConfiguration Config { get; set; }
+	
+	public bool SearchView { get; set; }
+	public IEnumerable<Emoji> FavouriteFeed { get; set; }
+	public IEnumerable<Emoji> EmojiSource { get; set; }
+
+	private List<Emoji> _shownEmojis;
+	private IEnumerator<Emoji> _emojiLoader;
+	private SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+	private string CurQuery = "";
+	
+	private void Load(string query = "")
+	{
+		Events.SetBusy();
+		if (_semaphoreSlim.CurrentCount != 0)
+		{
+			CurQuery = query;
+			if (query == "")
+			{
+				SearchView = false;
+			}
+			else
+			{
+				SearchView = true;
+			}
+			_semaphoreSlim.Wait();
+			try
+			{
+				FavouriteFeed = Search.GetFavouriteEmojis();
+				EmojiSource = Search.GetEmojis(query);
+				_shownEmojis = new List<Emoji>();
+				_emojiLoader = EmojiSource.GetEnumerator();
+				FetchEmojis();
+			}
+			finally
+			{
+				_semaphoreSlim.Release();
+			}
+			InvokeAsync(() =>
+			{
+				StateHasChanged();
+				JsRuntime.InvokeVoidAsync("resetScroll", "emoji-box");	
+			}).GetAwaiter().GetResult();
+		}
+	}
+
+	protected override void OnInitialized()
+	{
+		Load();
+		Events.RefreshEmojis += () => Load();
+		Events.QueryChangedEvent += Load;
+	}
+
+	private void FetchEmojis()
+    {
+		int cnt = 0;
+		while (_emojiLoader.MoveNext() && cnt < 100)
+		{
+			var cur = _emojiLoader.Current;
+			_shownEmojis.Add(cur);
+			cnt++;
+		}
+		if (cnt != 0)
+		{
+			Events.SetBusy();
+		}
+    }
+	private void EmojiClickCallback(Emoji obj, bool shift)
+	{
+		lock (Context)
+		{
+			Events.SetBusy();
+			obj.UsedFrequency++;
+			Context.Emojis.Update(obj);
+			Context.SaveChanges();
+			Clip.CopyEmoji(obj, shift);
+		
+			Events.ItemBarUpdate.Invoke(obj);
+			if (Config.HideAfterCopy)
+			{
+				Window.Hide();
+			}
+		}
+	}
+	
+	private void EmojiHoverCallback(Emoji obj)
+	{
+		Events.ItemBarUpdate?.Invoke(obj);
+	}
+}

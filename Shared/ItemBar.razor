@@ -1,0 +1,60 @@
+﻿@using emojipad.Services
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration conf
+<div id="info-bar">
+    @if (ShownEmoji == null)
+    {
+        <div style="padding-top: 5px; padding-left: 10px;">
+            <div style="font-size: 16px; font-weight: bold; height: 16px">
+                Select an emoji from the picker above.
+            </div>
+            <div style="font-size: 11px; padding-top: 4px">
+                Click or press enter to copy, hold shift to copy original image.
+            </div>
+        </div>
+    }
+    else
+    {
+        <img src="/api/load/@(ShownEmoji.FileName)" id="@ShownEmoji.FileName" 
+             style="max-width: 40px; max-height: 40px; float: left; margin-top: 6px; margin-left: 10px;"/>
+                                                                                                
+        <div style="padding-top: 4px; padding-left: 10px; display: inline-block">
+            <div style="font-size: 16px; font-weight: bold; height: 22px; max-width: 300px; overflow: hidden;" >
+                @ShownEmoji.FileName
+            </div>
+            <div style="font-size: 11px; padding-top: 0px">
+                Used @ShownEmoji.UsedFrequency times.
+            </div>
+        </div>
+    }
+
+
+</div>
+@code {
+    [Inject]
+    public EventService EventService { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            EventService.RefreshEmojis += () =>
+            {
+                ShownEmoji = null;
+                InvokeAsync(StateHasChanged);
+            };
+            EventService.QueryChangedEvent += (x) =>
+            {
+                ShownEmoji = null;
+                InvokeAsync(StateHasChanged);
+            };
+            EventService.ItemBarUpdate += emote =>
+            {
+                ShownEmoji = emote;
+                InvokeAsync(StateHasChanged);
+            };
+        }
+    }
+
+    public Emoji ShownEmoji { get; set; }
+}

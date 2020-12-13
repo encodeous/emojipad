@@ -1,0 +1,25 @@
+﻿// stylelint-disable scss/dollar-variable-pattern
+
+@use "sass:color";
+
+@use "@material/theme" with (
+    $primary: #29b6f6,
+    $secondary: #00c853,
+    $error: #ef9a9a,
+    $background:#2F3136,
+    $surface: #37474f,
+);
+
+@use "@material/typography" with (
+    $font-family: unquote("Raleway, sans-serif"),
+    $styles-button: ( font-size: 14px, font-weight: 500, letter-spacing: 0.05em, ),
+);
+
+@use "@material/top-app-bar";
+
+@use "material-components-web";
+
+.mdc-top-app-bar {
+  @include top-app-bar.fill-color(#37474f);
+  @include top-app-bar.ink-color(white);
+}

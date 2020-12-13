@@ -1,0 +1,30 @@
+{
+  "executable": "EmojiPad",
+  "splashscreen": {
+    "imageFile": ""
+  },
+  "name": "EmojiPad",
+  "author": "Adam Chen",
+  "singleInstance": true,
+  "environment": "Production",
+  "build": {
+    "appId": "com.emojipad.app",
+    "productName": "EmojiPad",
+    "copyright": "Copyright (C) 2020",
+    "buildVersion": "2.0.7",
+    "compression": "maximum",
+    "directories": {
+      "output": "../../../bin/Desktop"
+    },
+    "extraResources": [
+      {
+        "from": "./bin",
+        "to": "bin",
+        "filter": [ "**/*" ]
+      }
+    ],
+    "win": {
+      "icon": "../../../icon.png"
+    }
+  }
+}
