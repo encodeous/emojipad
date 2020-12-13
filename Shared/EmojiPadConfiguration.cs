@@ -27,7 +27,7 @@ namespace emojipad.Shared
                 RunOnStart = false,
                 Keybind = "Alt+E",
                 EmojiPasteSize = 48,
-                HideAfterCopy = true,
+                HideAfterCopy = false,
                 FrequentEmojiCount = 32,
                 RegexSearch = false,
                 EmojiFolderPath = Utilities.GetEmojiFolderPath(),

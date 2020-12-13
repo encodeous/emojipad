@@ -1,0 +1,12 @@
+{
+  "ShowOnStart": true,
+  "RunOnStart": false,
+  "HideAfterCopy": false,
+  "HideAfterLostFocus": false,
+  "RegexSearch": false,
+  "AlwaysOnTop": true,
+  "Keybind": "Alt+E",
+  "EmojiFolderPath": "F:\\encodeous\\emojipad\\bin\\Debug\\netcoreapp3.1\\emojis",
+  "EmojiPasteSize": 48,
+  "FrequentEmojiCount": 32
+}

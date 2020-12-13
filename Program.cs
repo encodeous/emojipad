@@ -26,6 +26,11 @@ namespace emojipad
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging(l =>
+                {
+                    l.ClearProviders();
+                    l.AddFile("logs/emojipad.log");
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseElectron(args);

@@ -29,11 +29,6 @@ namespace emojipad.Services
             
             Task.Run(() =>
             {
-                FileSystemWatcher fsw = new FileSystemWatcher();
-                fsw.Path = _config.EmojiFolderPath;
-                fsw.Filter = "*.*";
-                fsw.Renamed += FswOnRenamed;
-                fsw.EnableRaisingEvents = true;
                 while (Program.Running)
                 {
                     Thread.Sleep(1000);
@@ -54,55 +49,6 @@ namespace emojipad.Services
                 }
             });
         }
-        private void FswOnRenamed(object sender, RenamedEventArgs e)
-        {
-            lock (_context)
-            {
-                try
-                {
-                    _event.SetBusy();
-                    var fi = new FileInfo(e.FullPath);
-
-                    if (fi.Directory.FullName != _config.EmojiFolderPath && IsValidImage(fi))
-                    {
-                        return;
-                    }
-
-                    Console.WriteLine($"Emoji {e.OldName} has been Renamed to {e.Name}! Updating Database...");
-                    var sel = from k in _context.Emojis
-                        where k.FileName == e.OldName
-                        select k;
-                    if (sel.Count() != 0)
-                    {
-                        var f = sel.First();
-                        var nf = new Emoji()
-                        {
-                            FileName = fi.Name,
-                            UsedFrequency = f.UsedFrequency
-                        };
-                        _context.Add(nf);
-                        _context.Remove(f);
-                    }
-                    else
-                    {
-                        var f = new Emoji()
-                        {
-                            FileName = fi.Name,
-                            UsedFrequency = 0
-                        };
-                        _context.Add(f);
-                    }
-                    _event.InvokeRefreshEmojis();
-                    _context.SaveChanges();
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-        }
-        
-
         private bool SyncEmojiCache()
         {
             bool changed = false;

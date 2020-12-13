@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using emojipad.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Microsoft.Win32;
+using Image = SixLabors.ImageSharp.Image;
+using Size = System.Drawing.Size;
 
 namespace emojipad.Services
 {
@@ -54,39 +59,56 @@ namespace emojipad.Services
                         _mainWindow.Hide();
                     }
                 };
-                // try
-                // {
-                //     if (_config.RunOnStart)
-                //     {
-                //         using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-                //         {
-                //             string path = Path.Join(Utilities.GetExecutingFile(), "../../EmojiPad.exe");
-                //             key.SetValue("EmojiPad", "\"" + path + "\"");
-                //         }
-                //     }
-                //     else
-                //     {
-                //         using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-                //         {
-                //             key.DeleteValue("EmojiPad", false);
-                //         }
-                //     }
-                // }
-                // catch
-                // {
-                //     
-                // }
-
+                
                 Electron.App.SetLoginItemSettings(new LoginSettings()
                 {
                     OpenAtLogin = _config.RunOnStart
                 });
             });
+            Task.Run(() =>
+            {
+                NotifyIcon icon = new NotifyIcon();
+                icon.Icon = new Icon("icon.ico");
+                icon.Text = "Show EmojiPad";
+                var strip = new ContextMenuStrip();
+                strip.SuspendLayout();
+                strip.Size = new Size(152, 44);
+                icon.DoubleClick += (sender, args) =>
+                {
+                    _mainWindow?.Show();
+                };
+                var item1 = new ToolStripMenuItem("Show EmojiPad");
+                item1.Size = new Size(152, 22);
+                item1.Click += (sender, args) =>
+                {
+                    _mainWindow?.Show();
+                };
+                var item2 = new ToolStripMenuItem("Exit EmojiPad");
+                item2.Size = new Size(152, 22);
+                item2.Click += (sender, args) =>
+                {
+                    try
+                    {
+                        Electron.App.Exit();
+                    }
+                    catch
+                    {
+                        
+                    }
+                };
+                strip.Items.Add(item1);
+                strip.Items.Add(item2);
+                strip.ResumeLayout();
+                icon.ContextMenuStrip = strip;
+                icon.Visible = true;
+                
+                Application.Run();
+            });
         }
 
         public void Hide()
         {
-            _mainWindow.Hide();
+            _mainWindow?.Hide();
         }
     }
 }
