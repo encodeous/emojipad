@@ -20,6 +20,7 @@ namespace emojipad.Services
 {
     public class WindowService
     {
+        private bool Started = false;
         private BrowserWindow _mainWindow;
         private readonly EmojiPadConfiguration _config;
         public WindowService(EmojiPadConfiguration config)
@@ -27,31 +28,34 @@ namespace emojipad.Services
             _config = config;
         }
 
+        public async Task CreateWindow()
+        {
+            _mainWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions()
+            {
+                Width = 420,
+                Height = 400,
+                Resizable = false,
+                AlwaysOnTop = _config.AlwaysOnTop,
+                Title = "EmojiPad",
+                Show = _config.ShowOnStart,
+                SkipTaskbar = _config.AlwaysOnTop,
+                Frame = false,
+                WebPreferences = new WebPreferences()
+                {
+                    DevTools = false,
+                    ZoomFactor = 1
+                }
+            });
+        }
+
         public void OnLoad()
         {
             Task.Run(async () =>
             {
-                _mainWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions()
-                {
-                    Width = 420,
-                    Height = 400,
-                    Resizable = false,
-                    AlwaysOnTop = _config.AlwaysOnTop,
-                    Title = "EmojiPad",
-                    Show = _config.ShowOnStart,
-                    SkipTaskbar = _config.AlwaysOnTop,
-                    Frame = false,
-                    WebPreferences = new WebPreferences()
-                    {
-                        DevTools = false,
-                        ZoomFactor = 1
-                    }
-                });
-                Electron.GlobalShortcut.Register(_config.Keybind, () =>
-                {
-                    _mainWindow.Show();
-                    _mainWindow.Focus();
-                });
+                Started = true;
+                await CreateWindow();
+                Electron.WindowManager.IsQuitOnWindowAllClosed = false;
+                Electron.GlobalShortcut.Register(_config.Keybind, Show);
                 _mainWindow.OnBlur += () =>
                 {
                     if (_config.HideAfterLostFocus)
@@ -75,13 +79,13 @@ namespace emojipad.Services
                 strip.Size = new Size(152, 44);
                 icon.DoubleClick += (sender, args) =>
                 {
-                    _mainWindow?.Show();
+                    Show();
                 };
                 var item1 = new ToolStripMenuItem("Show EmojiPad");
                 item1.Size = new Size(152, 22);
                 item1.Click += (sender, args) =>
                 {
-                    _mainWindow?.Show();
+                    Show();
                 };
                 var item2 = new ToolStripMenuItem("Exit EmojiPad");
                 item2.Size = new Size(152, 22);
@@ -104,6 +108,19 @@ namespace emojipad.Services
                 
                 Application.Run();
             });
+        }
+
+        public void Show()
+        {
+            if (Started)
+            {
+                if (_mainWindow == null || Electron.WindowManager.BrowserWindows.Count == 0)
+                {
+                    CreateWindow().GetAwaiter().GetResult();
+                }
+                _mainWindow?.Show();
+                _mainWindow?.Focus();
+            }
         }
 
         public void Hide()
