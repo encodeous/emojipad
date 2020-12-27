@@ -16,6 +16,10 @@ namespace emojipad
         {
             return Path.Join(new FileInfo(GetExecutingFile()).Directory.FullName, "emojis");
         }
+        public static string GetEmojiDatabase()
+        {
+            return Path.Join(new FileInfo(GetExecutingFile()).Directory.FullName, "data");
+        }
         public static Size GetImageBounds(Size imgSize, int maxBounds)
         {
             int maxDim = Math.Max(imgSize.Height, imgSize.Width);

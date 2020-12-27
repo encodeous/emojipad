@@ -11,7 +11,7 @@
     "appId": "com.emojipad.app",
     "productName": "EmojiPad",
     "copyright": "Copyright (C) 2020",
-    "buildVersion": "2.1.5",
+    "buildVersion": "2.1.6",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ElectronNET.API;
@@ -20,7 +21,7 @@ namespace emojipad.Services
 {
     public class WindowService
     {
-        private bool Started = false;
+        private bool _started = false;
         private BrowserWindow _mainWindow;
         private readonly EmojiPadConfiguration _config;
         public WindowService(EmojiPadConfiguration config)
@@ -52,7 +53,7 @@ namespace emojipad.Services
         {
             Task.Run(async () =>
             {
-                Started = true;
+                _started = true;
                 await CreateWindow();
                 Electron.WindowManager.IsQuitOnWindowAllClosed = false;
                 Electron.GlobalShortcut.Register(_config.Keybind, Show);
@@ -112,11 +113,14 @@ namespace emojipad.Services
 
         public void Show()
         {
-            if (Started)
+            if (_started)
             {
                 if (_mainWindow == null || Electron.WindowManager.BrowserWindows.Count == 0)
                 {
-                    CreateWindow().GetAwaiter().GetResult();
+                    Electron.GlobalShortcut.UnregisterAll();
+                    Electron.App.Relaunch();
+                    Electron.App.Exit();
+                    return;
                 }
                 _mainWindow?.Show();
                 _mainWindow?.Focus();

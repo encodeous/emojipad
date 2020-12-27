@@ -6,7 +6,8 @@
   "RegexSearch": false,
   "AlwaysOnTop": true,
   "Keybind": "Alt+E",
-  "EmojiFolderPath": "F:\\encodeous\\emojipad\\bin\\Debug\\netcoreapp3.1\\emojis",
+  "EmojiFolderPath": "D:\\emoji-db",
+  "EmojiDatabasePath": "F:\\encodeous\\emojipad\\bin\\Debug\\net5.0-windows\\data",
   "EmojiPasteSize": 48,
   "FrequentEmojiCount": 32
 }

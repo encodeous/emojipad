@@ -16,6 +16,8 @@ namespace emojipad.Shared
         public bool AlwaysOnTop { get; set; }
         public string Keybind { get; set; }
         public string EmojiFolderPath { get; set; }
+        public string EmojiDatabasePath { get; set; }
+        [Range(1, 10000, ErrorMessage = "Must be from 1 to 10000")]
         public int EmojiPasteSize { get; set; }
         public int FrequentEmojiCount { get; set; }
         
@@ -32,7 +34,8 @@ namespace emojipad.Shared
                 RegexSearch = false,
                 EmojiFolderPath = Utilities.GetEmojiFolderPath(),
                 AlwaysOnTop = true,
-                HideAfterLostFocus = false
+                HideAfterLostFocus = false,
+                EmojiDatabasePath = Utilities.GetEmojiDatabase()
             };
             if (!File.Exists("emojipad-conf.json"))
             {
@@ -71,7 +74,8 @@ namespace emojipad.Shared
                 RegexSearch = RegexSearch,
                 EmojiFolderPath = EmojiFolderPath,
                 AlwaysOnTop = AlwaysOnTop,
-                HideAfterLostFocus = HideAfterLostFocus
+                HideAfterLostFocus = HideAfterLostFocus,
+                EmojiDatabasePath = EmojiDatabasePath
             };
         }
     }

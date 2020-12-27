@@ -39,7 +39,11 @@ namespace emojipad
 
             if (!Directory.Exists(cfg.EmojiFolderPath))
             {
-                cfg.EmojiFolderPath = def.EmojiFolderPath;
+                Directory.CreateDirectory(cfg.EmojiFolderPath);
+            }
+            if (!Directory.Exists(cfg.EmojiDatabasePath))
+            {
+                Directory.CreateDirectory(cfg.EmojiDatabasePath);
             }
 
             if (cfg.FrequentEmojiCount > 1000)

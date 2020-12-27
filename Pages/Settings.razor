@@ -32,6 +32,10 @@
                               Label="EmojiPad emoji folder path"
                               Outlined="true"
                               Dense="true"/>
+                <MatTextField Style="height: 40px; width: 100%; margin-bottom: 20px" @bind-Value="@Model.EmojiDatabasePath"
+                                              Label="EmojiPad Database Path"
+                                              Outlined="true"
+                                              Dense="true"/>
                 <MBSwitch Label="Show window on EmojiPad start" @bind-Value="@Model.ShowOnStart"/>
                 <br/>
                 <MBSwitch Label="Run on user login" @bind-Value="@Model.RunOnStart"/>
