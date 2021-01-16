@@ -1,6 +1,6 @@
 # EmojiPad
 
-EmojiPad is an alternative to Discord Nitro, and other emoji services for people who cant afford it :(
+EmojiPad is an alternative to Discord Nitro, and other emoji services for people who can't afford it :(
 
 ![Screenshot](screenshot-1.png)
 
