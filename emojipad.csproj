@@ -5,7 +5,7 @@
     <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ElectronNET.API" Version="9.31.2" />
+    <PackageReference Include="ElectronNET.API" Version="11.5.1" />
     <PackageReference Include="MatBlazor" Version="2.8.0" />
     <PackageReference Include="Material.Blazor" Version="1.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.1">
