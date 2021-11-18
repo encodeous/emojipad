@@ -2,7 +2,7 @@
 
 EmojiPad is an app designed for people who cannot afford Discord Nitro, or ones who want a more refined experience!
 
-![Screenshot of EmojiPad v3](screenshot.png)
+![Screenshot of EmojiPad v3](emojipad.png)
 
 ## Download EmojiPad
 
