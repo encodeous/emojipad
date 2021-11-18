@@ -1,16 +1,23 @@
 # EmojiPad
 
-EmojiPad is an app designed for people who cannot afford Discord Nitro, or ones who want a more refined experience!
+_Designed for people who cannot afford Discord Nitro, or ones who want a more refined experience!_
 
 ![Screenshot of EmojiPad v3](emojipad.png)
 
-## Download EmojiPad
+### Using EmojiPad
 
 - Download the [latest release](https://github.com/encodeous/emojipad/releases) for Windows
+- You can either install EmojiPad with `setup.exe` or run it directly.
+- Click the folder icon to add emojis!
+- You can configure EmojiPad with the gear icon.
+
+#### First use notes
+- You should restart EmojiPad after changing the emoji folder path, or database path in settings.
+- If there are a lot of emojis, it may take EmojiPad up to a minute to index and build the emoji cache. (This also happens if you changes the `Emoji Paste Size`)
 
 ## What is EmojiPad
 
-EmojiPad is a highly configurable image clipboard application. EmojiPad organizes your favourite emojis together, and provides a lightning-fast search to allow you to find the perfect emoji for any occasion! To get started, simply click the folder icon and paste in some emojis.
+EmojiPad is a highly configurable emoji clipboard application. EmojiPad organizes your favourite emojis together, and provides a lightning-fast search to allow you to find the perfect emoji for any occasion! To get started, simply click the folder icon and paste in some emojis.
 
 ## Features
 
