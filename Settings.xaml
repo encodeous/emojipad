@@ -1,0 +1,90 @@
+﻿<Window x:Class="EmojiPad.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        xmlns:utils="clr-namespace:EmojiPad.Utils"
+        mc:Ignorable="d"
+        Title="EmojiPad Settings" Height="650" Width="400"
+        fw:AcrylicWindow.Enabled="True"
+        fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
+        fw:AcrylicWindow.TintOpacity="0.3"
+        fw:AcrylicWindow.NoiseOpacity="0.001"
+        fw:AcrylicWindow.TintColor="#2f3136"
+        fw:AcrylicWindow.FallbackColor="#2f3136"
+        ResizeMode="NoResize"
+        Closed="Window_Closed"
+        Topmost="true">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Control.Foreground" Value="WhiteSmoke"/>
+        </Style>
+    </Window.Resources>
+    <Grid fw:PointerTracker.Enabled="True" Background="#01FFFFFF" Margin="3">
+        <StackPanel Orientation="Vertical" Margin="10">
+            <TextBlock FontSize="30" Margin="10">
+                Configure EmojiPad
+            </TextBlock>
+            <CheckBox Margin="3" IsChecked="{Binding Config.ShowOnStart, UpdateSourceTrigger=PropertyChanged}">Show window on app launch</CheckBox>
+            <CheckBox Margin="3" IsChecked="{Binding Config.HideAfterCopy, UpdateSourceTrigger=PropertyChanged}">Hide window after copying emoji</CheckBox>
+            <CheckBox Margin="3" IsChecked="{Binding Config.CloseToTray, UpdateSourceTrigger=PropertyChanged}">Hide to tray when the close button is pressed</CheckBox>
+            <CheckBox Margin="3" IsChecked="{Binding Config.HideAfterLostFocus, UpdateSourceTrigger=PropertyChanged}">Hide to tray after losing focus</CheckBox>
+            <CheckBox Margin="3" IsChecked="{Binding Config.RegexSearch, UpdateSourceTrigger=PropertyChanged}">Enable regex in the search bar</CheckBox>
+            <CheckBox Margin="3" IsChecked="{Binding Config.AlwaysOnTop, UpdateSourceTrigger=PropertyChanged}">Show EmojiPad ontop of other apps</CheckBox>
+
+            <Label Foreground="WhiteSmoke">
+                Click to change activation key
+            </Label>
+
+            <Button Name="ActivationButton" Margin="6" Style="{StaticResource ButtonRevealStyle}" Height="30"
+                    HorizontalAlignment="Left" Width="300" Click="Activation_Click" Content="{Binding Model.HotKeySelectorText}"></Button>
+
+            <Label>Emoji Folder Path</Label>
+            <TextBox  Style="{StaticResource TextBoxRevealStyle}"
+                         Background="{DynamicResource fw:AcrylicBrush}"
+                         Foreground="WhiteSmoke" CaretBrush="White" Margin="3"
+                  Text="{Binding Config.EmojiFolderPath, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label>Emoji Database Path</Label>
+            <TextBox  Style="{StaticResource TextBoxRevealStyle}"
+                         Background="{DynamicResource fw:AcrylicBrush}"
+                         Foreground="WhiteSmoke" CaretBrush="White" Margin="3"
+                  Text="{Binding Config.EmojiDatabasePath, UpdateSourceTrigger=PropertyChanged}"/>
+            <Label>Emoji Paste Size</Label>
+            <TextBox Style="{StaticResource TextBoxRevealStyle}"
+                         Background="{DynamicResource fw:AcrylicBrush}"
+                         Foreground="WhiteSmoke" CaretBrush="White" Margin="3">
+                <TextBox.Text>
+                    <Binding Path="Config.EmojiPasteSize"
+                 Mode="TwoWay"
+                 UpdateSourceTrigger="PropertyChanged"
+                 ValidatesOnNotifyDataErrors="True"
+                 ValidatesOnDataErrors="True"
+                 NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <utils:NumericValidationRule ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label>Frequent Display Count (Displayed at the top of all emojis)</Label>
+            <TextBox Style="{StaticResource TextBoxRevealStyle}"
+                         Background="{DynamicResource fw:AcrylicBrush}"
+                         Foreground="WhiteSmoke" CaretBrush="White" Margin="3">
+                <TextBox.Text>
+                    <Binding Path="Config.FrequentEmojiCount"
+                 Mode="TwoWay"
+                 UpdateSourceTrigger="PropertyChanged"
+                 ValidatesOnNotifyDataErrors="True"
+                 ValidatesOnDataErrors="True"
+                 NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <utils:NumericValidationRule ValidatesOnTargetUpdated="True"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Button Margin="6" Style="{StaticResource ButtonRevealStyle}" Height="30" HorizontalAlignment="Left" Width="100" Click="Save_Click">Save Changes</Button>
+        </StackPanel>
+    </Grid>
+</Window>

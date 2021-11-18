@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<StartupObject>EmojiPad.Program</StartupObject>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<Authors>Encodeous</Authors>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="App.xaml.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\folder.png" />
+      <None Remove="Assets\gear.png" />
+      <None Remove="icon.ico" />
+      <None Remove="Program.cs~RFa8f7256.TMP" />
+      <None Remove="sidebar.png" />
+      <None Remove="wpficon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="wpficon.ico" />
+      <Content Include="icon.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Assets\folder.png" />
+      <Resource Include="Assets\gear.png" />
+      <Resource Include="Assets\sidebar.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentWPF" Version="0.10.2" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+      <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+      <PackageReference Include="VirtualizingWrapPanel" Version="1.5.6" />
+    </ItemGroup>
+
+</Project>
