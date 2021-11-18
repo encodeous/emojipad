@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows;
 using EmojiPad.Data;
 using EmojiPad.Services;
@@ -68,6 +69,45 @@ namespace EmojiPad.Utils
             int maxDim = Math.Max(imgSize.Height, imgSize.Width);
             decimal val = (decimal)maxBounds / maxDim;
             return new Size((int)Math.Round(imgSize.Width * val), (int)Math.Round(imgSize.Height * val));
+        }
+        [DllImport("User32.dll")]
+        public static extern bool IsIconic(IntPtr hWnd);
+
+        [DllImport("User32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("User32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        public const int SW_RESTORE = 9;
+        public static bool AlreadyRunning()
+        {
+            bool running = false;
+            try
+            {
+                // Getting collection of process  
+                Process currentProcess = Process.GetCurrentProcess();
+
+                // Check with other process already running   
+                foreach (var p in Process.GetProcesses())
+                {
+                    if (p.Id != currentProcess.Id) // Check running process   
+                    {
+                        if (p.MainModule is not null && currentProcess.MainModule is not null
+                            && p.MainModule.FileName == currentProcess.MainModule.FileName)
+                        {
+                            running = true;
+                            IntPtr hFound = p.MainWindowHandle;
+                            if (IsIconic(hFound))
+                                ShowWindow(hFound, SW_RESTORE);
+                            SetForegroundWindow(hFound);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch { }
+            return running;
         }
     }
 }

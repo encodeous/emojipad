@@ -86,5 +86,11 @@ namespace EmojiPad
             var conf = Utilities.GetService<EmojiPadConfiguration>();
             model.HotKeySelectorText = $"[{Utilities.GetActivationKeyDisplay(conf.Keybind)}] Click to set activation key";
         }
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
+        }
     }
 }

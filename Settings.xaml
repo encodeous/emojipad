@@ -11,17 +11,18 @@
         fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
         fw:AcrylicWindow.TintOpacity="0.3"
         fw:AcrylicWindow.NoiseOpacity="0.001"
-        fw:AcrylicWindow.TintColor="#2f3136"
-        fw:AcrylicWindow.FallbackColor="#2f3136"
+        fw:AcrylicWindow.TintColor="#1f1f1f"
+        fw:AcrylicWindow.FallbackColor="#2f31364D"
         ResizeMode="NoResize"
         Closed="Window_Closed"
-        Topmost="true">
+        Topmost="true"
+        MouseDown="Window_MouseDown">
     <Window.Resources>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="Control.Foreground" Value="WhiteSmoke"/>
         </Style>
     </Window.Resources>
-    <Grid fw:PointerTracker.Enabled="True" Background="#01FFFFFF" Margin="3">
+    <Grid fw:PointerTracker.Enabled="True" Margin="3">
         <StackPanel Orientation="Vertical" Margin="10">
             <TextBlock FontSize="30" Margin="10">
                 Configure EmojiPad
@@ -37,7 +38,7 @@
                 Click to change activation key
             </Label>
 
-            <Button Name="ActivationButton" Margin="6" Style="{StaticResource ButtonRevealStyle}" Height="30"
+            <Button Margin="6" Style="{StaticResource ButtonRevealStyle}" Name="ActivationButton" Height="30"
                     HorizontalAlignment="Left" Width="300" Click="Activation_Click" Content="{Binding Model.HotKeySelectorText}"></Button>
 
             <Label>Emoji Folder Path</Label>

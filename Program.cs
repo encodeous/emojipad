@@ -21,8 +21,7 @@ namespace EmojiPad
         [STAThread]
         static void Main(string[] args)
         {
-            var mtx = new Mutex(true, "Encodeous-EmojiPad", out var isNew);
-            if (!isNew)
+            if (Utilities.AlreadyRunning())
             {
                 return;
             }
