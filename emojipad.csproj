@@ -44,7 +44,7 @@
     <ItemGroup>
       <PackageReference Include="FluentWPF" Version="0.9.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
       <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
