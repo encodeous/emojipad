@@ -47,7 +47,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-      <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
+      <PackageReference Include="SixLabors.ImageSharp" Version="2.1.1" />
       <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
       <PackageReference Include="VirtualizingWrapPanel" Version="1.5.6" />
     </ItemGroup>
