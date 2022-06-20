@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -82,11 +83,13 @@ namespace EmojiPad.Services
             kbh.Install();
             kbh.KeyDown += (k) =>
             {
+                Debug.WriteLine($"DOWN {k.ToString()}");
                 KeysDown.Add(k);
                 return KeysUpdate();
             };
             kbh.KeyUp += (k) =>
             {
+                Debug.WriteLine($"UP {k.ToString()}");
                 KeysDown.Remove(k);
                 return KeysUpdate();
             };
@@ -146,6 +149,16 @@ namespace EmojiPad.Services
                         return false;
                     }  
                 }
+                
+                foreach (VKeys key in KeysDown)
+                {
+                    if (!conf.Keybind.Contains(key))
+                    {
+                        return false;
+                    }
+                }
+                
+                KeysDown.Clear();
 
                 Task.Run(() =>
                 {

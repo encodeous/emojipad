@@ -276,11 +276,11 @@ namespace EmojiPad.Utils
             {
                 int iwParam = wParam.ToInt32();
 
-                if ((iwParam == WM_KEYDOWN || iwParam == WM_SYSKEYDOWN))
+                if (iwParam is WM_KEYDOWN or WM_SYSKEYDOWN)
                     if (KeyDown != null)
                         if (KeyDown((VKeys)Marshal.ReadInt32(lParam)))
                             return (IntPtr)1;
-                if ((iwParam == WM_KEYUP || iwParam == WM_SYSKEYUP))
+                if (iwParam is WM_KEYUP or WM_SYSKEYUP)
                     if (KeyUp != null)
                         if (KeyUp((VKeys)Marshal.ReadInt32(lParam)))
                             return (IntPtr)1;
