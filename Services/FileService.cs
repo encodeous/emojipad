@@ -21,12 +21,14 @@ namespace EmojiPad.Services
         private readonly EmojiPadConfiguration _config;
         private EventService _event;
         private SQLiteConnection _context;
+        private SemaphoreSlim _syncSemaphore;
 
         public FileService(EventService events, EmojiPadConfiguration config, SQLiteConnection ctx)
         {
             _event = events;
             _config = config;
             _context = ctx;
+            _syncSemaphore = new SemaphoreSlim(1);
 
             if (!Directory.Exists(_config.EmojiFolderPath))
             {
@@ -36,24 +38,38 @@ namespace EmojiPad.Services
 
         public void Sync()
         {
+
             Task.Run(async () =>
             {
-                if (SyncEmojiCache())
+                if (_syncSemaphore.CurrentCount != 0)
                 {
-                    _event.SetBusy();
-                    await Task.Delay(1000);
-                    _event.InvokeRefreshEmojis();
+                    try
+                    {
+                        await _syncSemaphore.WaitAsync();
+                        if (SyncEmojiCache())
+                        {
+                            _event.SetBusy(1000);
+                            _event.InvokeRefreshEmojis();
+                        }
+                    }
+                    finally
+                    {
+                        _syncSemaphore.Release();
+                    }
                 }
             });
         }
+
         private bool SyncEmojiCache()
         {
             bool changed = false;
 
             var dir = new DirectoryInfo(_config.EmojiFolderPath);
             var files = new Dictionary<string, string>();
+            
             foreach (var enumerateFile in dir.EnumerateFiles())
             {
+                _event.SetBusy(500);
                 if (IsValidImage(enumerateFile))
                 {
                     files[enumerateFile.Name] = HashFile(enumerateFile.Name);
@@ -64,6 +80,7 @@ namespace EmojiPad.Services
             var deletedEmojis = new List<Emoji>();
             foreach (var k in _context.Table<Emoji>())
             {
+                _event.SetBusy(500);
                 if (!files.ContainsKey(k.EmojiName) || !files.ContainsValue(k.FileHash))
                 {
                     changed = true;
@@ -82,10 +99,10 @@ namespace EmojiPad.Services
                     _context.Delete(k);
                 }
             });
-            
 
-            foreach (var file in files)
+            Parallel.ForEach(files, new ParallelOptions { MaxDegreeOfParallelism = 3 }, (file, token) =>
             {
+                _event.SetBusy(500);
                 changed = true;
                 Console.WriteLine($"Adding Emoji {file} to index, the file was created!");
                 var emoji = new Emoji()
@@ -96,7 +113,7 @@ namespace EmojiPad.Services
                 };
                 CacheEmoji(emoji);
                 _context.Insert(emoji);
-            }
+            });
 
             return changed;
         }
@@ -115,6 +132,12 @@ namespace EmojiPad.Services
 
         public void CacheEmoji(Emoji emoji)
         {
+            var cacheDir = Path.Join(Path.GetTempPath(), "emojipad");
+
+            if (!Directory.Exists(cacheDir))
+            {
+                Directory.CreateDirectory(cacheDir);
+            }
             if((!File.Exists(Utilities.GetCachedPath(emoji)) || emoji.PasteSize != _config.EmojiPasteSize) && emoji.FileHash is not null)
             {
                 Utilities.GetService<EventService>().SetBusy();
