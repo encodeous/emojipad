@@ -146,7 +146,11 @@ namespace EmojiPad.Services
                         return false;
                     }  
                 }
-                Utilities.GetService<WindowService>().ShowWindow();
+
+                Task.Run(() =>
+                {
+                    Utilities.GetService<WindowService>().ShowWindow();
+                });
             }
             return true;
         }

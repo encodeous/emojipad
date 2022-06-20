@@ -18,9 +18,9 @@ namespace EmojiPad.Utils
 {
     public static class Utilities
     {
-        public static string GetCurDir()
+        public static string GetDataDir()
         {
-            return Environment.CurrentDirectory;
+            return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "emojipad");
         }
         public static T GetService<T>()
         {
@@ -28,11 +28,11 @@ namespace EmojiPad.Utils
         }
         public static string GetEmojiFolderPath()
         {
-            return Path.Join(GetCurDir(), "emojis");
+            return Path.Join(GetDataDir(), "emojis");
         }
         public static string GetEmojiDatabase()
         {
-            return Path.Join(GetCurDir(), "data");
+            return Path.Join(GetDataDir(), "data");
         }
         private static Random random = new Random();
 

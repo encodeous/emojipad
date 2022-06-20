@@ -26,6 +26,12 @@
         <BitmapImage x:Key="SideBarImage" UriSource="Assets/sidebar.png"/>
         <BitmapImage x:Key="SettingsImage" UriSource="Assets/gear.png"/>
         <BitmapImage x:Key="FolderImage" UriSource="Assets/folder.png"/>
+        <BitmapImage x:Key="RefreshImage" UriSource="Assets/refresh.png"/>
+        <Style TargetType="ToolTip">
+            <Setter Property="HasDropShadow"
+                    Value="True" />
+            <Setter Property="Background" Value="Black"/>
+        </Style>
     </Window.Resources>
     <Grid fw:PointerTracker.Enabled="True" Background="#01FFFFFF" Margin="3">
         <Grid.ColumnDefinitions>
@@ -44,6 +50,9 @@
                        Style="{StaticResource OptionsHoverStyle}"/>
                 <Image VerticalAlignment="Bottom" Height="30px" Source="{StaticResource FolderImage}"
                    Cursor="Hand" ToolTip="Open Emoji Folder" Margin="9" MouseDown="OnFolderClick"
+                       Style="{StaticResource OptionsHoverStyle}"/>
+                <Image VerticalAlignment="Bottom" Height="30px" Source="{StaticResource RefreshImage}"
+                       Cursor="Hand" ToolTip="Refresh Emojis" Margin="9" MouseDown="OnRefreshClick"
                        Style="{StaticResource OptionsHoverStyle}"/>
                 <Canvas Background="{Binding StatusColor}" Height="5" Opacity="0.3"/>
             </StackPanel>

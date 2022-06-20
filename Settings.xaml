@@ -3,16 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
         xmlns:utils="clr-namespace:EmojiPad.Utils"
         mc:Ignorable="d"
         Title="EmojiPad Settings" Height="650" Width="400"
-        fw:AcrylicWindow.Enabled="True"
-        fw:AcrylicWindow.AcrylicWindowStyle="NoIcon"
-        fw:AcrylicWindow.TintOpacity="0.3"
-        fw:AcrylicWindow.NoiseOpacity="0.001"
-        fw:AcrylicWindow.TintColor="#1f1f1f"
-        fw:AcrylicWindow.FallbackColor="#2f31364D"
+        Background="DarkSlateGray"
         ResizeMode="NoResize"
         Closed="Window_Closed"
         Topmost="true"
@@ -22,7 +16,7 @@
             <Setter Property="Control.Foreground" Value="WhiteSmoke"/>
         </Style>
     </Window.Resources>
-    <Grid fw:PointerTracker.Enabled="True" Margin="3">
+    <Grid Margin="3">
         <StackPanel Orientation="Vertical" Margin="10">
             <TextBlock FontSize="30" Margin="10">
                 Configure EmojiPad

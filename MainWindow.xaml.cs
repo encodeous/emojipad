@@ -65,6 +65,12 @@ namespace EmojiPad
                 Verb = "open"
             });
         }
+        
+        private void OnRefreshClick(object sender, MouseButtonEventArgs e)
+        {
+            var cfg = Utilities.GetService<FileService>();
+            cfg.Sync();
+        }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

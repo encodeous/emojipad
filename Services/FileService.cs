@@ -32,25 +32,17 @@ namespace EmojiPad.Services
             {
                 Directory.CreateDirectory(_config.EmojiFolderPath);
             }
-            
-            Task.Run(() =>
+        }
+
+        public void Sync()
+        {
+            Task.Run(async () =>
             {
-                while (ServiceHost.IsRunning)
+                if (SyncEmojiCache())
                 {
-                    Thread.Sleep(5000);
-                    try
-                    {
-                        if (SyncEmojiCache())
-                        {
-                            _event.SetBusy();
-                            Thread.Sleep(1000);
-                            _event.InvokeRefreshEmojis();
-                        }
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
+                    _event.SetBusy();
+                    await Task.Delay(1000);
+                    _event.InvokeRefreshEmojis();
                 }
             });
         }
@@ -65,7 +57,6 @@ namespace EmojiPad.Services
                 if (IsValidImage(enumerateFile))
                 {
                     files[enumerateFile.Name] = HashFile(enumerateFile.Name);
-                    Thread.Sleep(10);
                 }
             }
 
