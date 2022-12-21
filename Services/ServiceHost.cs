@@ -24,7 +24,7 @@ namespace EmojiPad.Services
         public static HashSet<VKeys> KeysDown = new HashSet<VKeys>();
         private static BackoffManager _queryDispatcher = new BackoffManager(TimeSpan.FromMilliseconds(200));
         private static BackoffManager _busyDispatcher = new BackoffManager(TimeSpan.FromMilliseconds(200));
-        private static readonly Brush _busyBrush = new SolidColorBrush(Colors.Red);
+        private static readonly Brush _busyBrush = new SolidColorBrush(Color.FromRgb(255, 163, 0));
         private static readonly Brush _readyBrush = new SolidColorBrush(Colors.LimeGreen);
 
         public void Stop()
@@ -49,9 +49,12 @@ namespace EmojiPad.Services
                         model.ShownEmojis.Clear();
                         var search = Utilities.GetService<SearchService>();
                         var _context = Utilities.GetService<SQLiteConnection>().Table<Emoji>();
-                        foreach (var k in search.GetFavouriteEmojis())
+                        if (_context.Count() >= 100)
                         {
-                            model.ShownEmojis.Add(k);
+                            foreach (var k in search.GetFavouriteEmojis())
+                            {
+                                model.ShownEmojis.Add(k);
+                            }
                         }
                         foreach (var k in _context)
                         {

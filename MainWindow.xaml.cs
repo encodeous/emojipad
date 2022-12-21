@@ -52,7 +52,7 @@ namespace EmojiPad
         {
             var wnd = new Settings();
             wnd.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            wnd.Show();
+            wnd.ShowDialog();
         }
 
         private void OnFolderClick(object sender, MouseButtonEventArgs e)
@@ -97,7 +97,7 @@ namespace EmojiPad
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
                 this.DragMove();
         }
     }
