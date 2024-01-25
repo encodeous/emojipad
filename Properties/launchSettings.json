@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "emojipad (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "emojipad (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,80 +1,14 @@
-﻿<Window x:Class="EmojiPad.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
-        xmlns:local="clr-namespace:EmojiPad"
-        mc:Ignorable="d"
-        Title="EmojiPad" 
-        Height="500" Width="500"
-        fw:AcrylicWindow.Enabled="False"
-        Background="#2e2e2e"
-        ResizeMode="NoResize"
-        Closing="Window_Closing"
-        Icon="/wpficon.ico"
-        Deactivated="Window_Deactivated"
-        MouseDown="Window_MouseDown"
-        Topmost="{Binding Config.AlwaysOnTop}"
-        >
-    <Window.Resources>
-        <BitmapImage x:Key="SideBarImage" UriSource="Assets/sidebar.png"/>
-        <BitmapImage x:Key="SettingsImage" UriSource="Assets/gear.png"/>
-        <BitmapImage x:Key="FolderImage" UriSource="Assets/folder.png"/>
-        <BitmapImage x:Key="RefreshImage" UriSource="Assets/refresh.png"/>
-        <Style TargetType="ToolTip">
-            <Setter Property="HasDropShadow"
-                    Value="True" />
-            <Setter Property="Background" Value="Black"/>
-        </Style>
-    </Window.Resources>
-    <Grid fw:PointerTracker.Enabled="True" Background="#01FFFFFF" Margin="3">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="7*" />
-        </Grid.ColumnDefinitions>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Image VerticalAlignment="Top" Grid.Row="0" Height="200px" Source="{StaticResource SideBarImage}"/>
-            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,8">
-                <Image VerticalAlignment="Bottom" Height="30px" Source="{StaticResource SettingsImage}"
-                   Cursor="Hand" ToolTip="Open Settings" Margin="9" MouseDown="OnSettingsClick"
-                       Style="{StaticResource OptionsHoverStyle}"/>
-                <Image VerticalAlignment="Bottom" Height="30px" Source="{StaticResource FolderImage}"
-                   Cursor="Hand" ToolTip="Open Emoji Folder" Margin="9" MouseDown="OnFolderClick"
-                       Style="{StaticResource OptionsHoverStyle}"/>
-                <Image VerticalAlignment="Bottom" Height="30px" Source="{StaticResource RefreshImage}"
-                       Cursor="Hand" ToolTip="Refresh Emojis" Margin="9" MouseDown="OnRefreshClick"
-                       Style="{StaticResource OptionsHoverStyle}"/>
-                <Canvas Background="{Binding StatusColor}" Height="5" Opacity="0.3"/>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Column="1" HorizontalAlignment="Center">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="9*"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="10">
-                <TextBlock Name="SearchBox" FontSize="30" Text="Search for Emojis"/>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Margin="0,10,0,10" Style="{StaticResource TextBoxRevealStyle}"
-                             Background="{DynamicResource fw:AcrylicBrush}"
-                             Foreground="WhiteSmoke" CaretBrush="White"
-                             Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    />
-                    <Button Grid.Column="1" Margin="6" Style="{StaticResource ButtonRevealStyle}" Height="30" Width="50" Background="{DynamicResource fw:AcrylicBrush}" Click="Button_Click">
-                        Clear
-                    </Button>
-                </Grid>
-            </StackPanel>
-            <local:EmojiPicker Grid.Row="1" x:Name="Emojis"/>
-        </Grid>
-    </Grid>
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="emojipad.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:emojipad"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    </StackPanel>
 </Window>
