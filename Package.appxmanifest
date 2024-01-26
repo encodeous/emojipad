@@ -8,14 +8,14 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="c6b382e7-faa2-41c8-bc5a-b623be116a61"
-    Publisher="CN=encodeous"
+    Name="52904encodeous.EmojiPad"
+    Publisher="CN=B8D8563E-0FBC-4764-B49C-82289E705451"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="c6b382e7-faa2-41c8-bc5a-b623be116a61" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="c42dd9c0-1d18-46d0-9013-f354201f2865" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>emojipad</DisplayName>
+    <DisplayName>EmojiPad</DisplayName>
     <PublisherDisplayName>encodeous</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="emojipad"
+        DisplayName="EmojiPad"
         Description="emojipad"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
