@@ -1,39 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <UserControl
-    x:Class="emojipad.Views.Components.EmojiPicker"
+    x:Class="EmojiPad.Views.Components.EmojiPicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:emojipad.Views.Components"
+    xmlns:local="using:EmojiPad.Views.Components"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:EmojiPad.Models" 
-    xmlns:models1="using:emojipad.Models" d:DataContext="{d:DesignInstance Type=models1:AppState}"
+    xmlns:models1="using:EmojiPad.Models" d:DataContext="{d:DesignInstance Type=models1:AppState}"
     mc:Ignorable="d">
 
     <StackPanel>
         <AutoSuggestBox Name="Search"
-                        PlaceholderText="Search for Emojis"
                         QueryIcon="Find"
                         TabIndex="0"
                         LosingFocus="Search_LosingFocus"
+                        TextChanged="Search_OnTextChanged"
+                        Background="{StaticResource AppBarButtonRevealBackground}"
+                        BorderThickness="0"
+                        QuerySubmitted="Search_OnQuerySubmitted"
                         Text="{Binding Query, Mode=TwoWay}"/>
+        <TextBlock Text="Search for Emojis"
+                   Name="Hint"
+                   Margin="10,-28,0,0"
+                   Opacity="0.7"
+                   IsHitTestVisible="False"/>
         <Grid Margin="0,10,0,0">
+            <TextBlock Text="Setup EmojiPad by clicking the Gear icon in the top right."
+                       HorizontalAlignment="Center"
+                       Margin="0,20,0,0"
+                       TextWrapping="WrapWholeWords"
+                       Visibility="{Binding SetupVisibility, Mode=TwoWay}">
+            </TextBlock>
             <ItemsView ItemsSource="{Binding DisplayedEmojis}"
-                       x:DataType="models1:AppState"
                        Width="auto"
-                       Height="310"
+                       Height="323"
+                       Name="ItemsView"
                        SelectionMode="None"
                        IsItemInvokedEnabled="True">
                 <ItemsView.ItemTemplate>
                     <DataTemplate x:DataType="models:Emoji">
-                        <ItemContainer BorderThickness="0">
-
-                            <Grid Width="52" Height="52">
-                                <TextBlock Text="{x:Bind EmojiName}">
+                        <ItemContainer BorderThickness="0" Margin="2"
+                                       Tag="{Binding Path=EmojiName}">
+                            <Grid Width="43" Height="43">
+                                <Image Source="{Binding Path=Path}"
+                                       Tag="{Binding Path=EmojiName}"
+                                       IsTabStop="True"
+                                       PointerEntered="UIElement_OnPointerEntered"
+                                       PointerExited="UIElement_OnPointerExited"
+                                       PointerPressed="UIElement_OnPointerPressed">
                                     <ToolTipService.ToolTip>
-                                        <ToolTip Content="{x:Bind EmojiName}"/>
+                                        <ToolTip Content="{Binding Path=EmojiName}"/>
                                     </ToolTipService.ToolTip>
-                                </TextBlock>
+                                </Image>
                             </Grid>
                         </ItemContainer>
                     </DataTemplate>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="EmojiPad.Views.Components.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EmojiPad.Views.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:EmojiPad.Models"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=models:AppState}">
+
+    <ListView
+        Width="350"
+        SelectionMode="None">
+        <ToggleSwitch IsOn="{Binding Path=TempConfig.Autostart, Mode=TwoWay}"
+                      Header="Start on boot"/>
+        <ToggleSwitch IsOn="{Binding Path=TempConfig.StartMinimized, Mode=TwoWay}"
+                      Header="Hide on application start"/>
+        <ToggleSwitch IsOn="{Binding Path=TempConfig.HideOnLoseFocus, Mode=TwoWay}"
+                      Header="Hide window when focus is lost"/>
+        <ToggleSwitch IsOn="{Binding Path=TempConfig.HideAfterCopy, Mode=TwoWay}"
+                      Header="Hide after copying"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Header="Emoji Folder"
+                     x:Name="FolderText"
+                     Text="{Binding Path=TempConfig.EmojiFolder, Mode=TwoWay}"
+                     IsReadOnly="True"/>
+            <Button Grid.Column="1"
+                    Content="Pick Folder"
+                    Margin="5,27,0,0"
+                    Click="ButtonBase_OnClick"/>
+        </Grid>
+        <Slider Margin="0,10,0,0"
+                Header="Emoji Crop Size (0 to disable)"
+                Minimum="0"
+                Maximum="100"
+                Value="{Binding Path=TempConfig.CropSize, Mode=TwoWay}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Header="Activation Hotkey"
+                     x:Name="Hotkey"
+                     Text="{Binding Path=TempConfig.UiHotKey, Mode=OneWay}"
+                     IsReadOnly="True"/>
+            <Button Grid.Column="1"
+                    Content="Select Hotkey"
+                    IsEnabled="{Binding Path=IsNotConfiguringHotkey, Mode=OneWay}"
+                    Margin="5,30,0,0"
+                    Click="HotkeySetClicked"/>
+        </Grid>
+        <HyperlinkButton Content="Open Raw Configuration File" Click="Config_OnClick"/>
+    </ListView>
+</UserControl>

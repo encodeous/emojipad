@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinUIEx;
 
-namespace emojipad.Utils
+namespace EmojiPad.Utils
 {
     internal class WindowUtils
     {
